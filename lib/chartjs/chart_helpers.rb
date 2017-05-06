@@ -36,8 +36,8 @@ module Chartjs
       canvas = content_tag :canvas, '', id: element_id, class: css_class, width: width, height: height
 
       script = javascript_tag do
-        <<-END.squish.html_safe
-        $(document).on('turbolinks:load', function() {
+        <<-END.html_safe
+        (function() {
           var initChart = function() {
             var ctx = document.getElementById(#{element_id.to_json});
             if(ctx){
@@ -59,13 +59,15 @@ module Chartjs
             /* W3C standard */
             if (window.addEventListener) {
               window.addEventListener("load", initChart, false);
+              window.addEventListener("page:load", initChart, false);
+              window.addEventListener("turbolinks:load", initChart, false);
             }
             /* IE */
             else if (window.attachEvent) {
               window.attachEvent("onload", initChart);
             }
           }
-        });
+        })();
         END
       end
 
